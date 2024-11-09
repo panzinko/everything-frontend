@@ -1,0 +1,444 @@
+openapi: 3.0.0
+info:
+  title: OpenWeather One Call API
+  description: OpenWeather One Call API 3.0 for comprehensive weather data
+  version: 3.0.0
+servers:
+  - url: https://api.openweathermap.org/data/3.0
+paths:
+  /onecall:
+    get:
+      summary: Get current and forecast weather data
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Latitude
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Longitude
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+            description: API key
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: metric
+        - name: exclude
+          in: query
+          required: false
+          schema:
+            type: string
+            description: 'Comma-separated parts to exclude: current,minutely,hourly,daily,alerts'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OneCallResponse'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests - API key quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /onecall/timemachine:
+    get:
+      summary: Get historical weather data or future forecast
+      description: Access weather data for any timestamp (45+ years history and 4 days ahead)
+      parameters:
+        - name: dt
+          in: query
+          required: true
+          schema:
+            type: integer
+            description: Timestamp (Unix time, UTC)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OneCallResponse'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests - API key quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /onecall/day_summary:
+    get:
+      summary: Get daily weather aggregation
+      description: Daily aggregation of weather data (45+ years archive and 1.5 years ahead)
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            description: Date in YYYY-MM-DD format
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Latitude
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Longitude
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+            description: API key
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: metric
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DailyForecast'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests - API key quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /onecall/climate:
+    get:
+      summary: Get weather overview with AI summary
+      description: Human-readable weather summary for today and tomorrow using OpenWeather AI
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Latitude
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            description: Longitude
+        - name: appid
+          in: query
+          required: true
+          schema:
+            type: string
+            description: API key
+        - name: units
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [standard, metric, imperial]
+            default: metric
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: string
+                    description: AI-generated weather summary
+                  current:
+                    $ref: '#/components/schemas/CurrentWeather'
+                  tomorrow:
+                    $ref: '#/components/schemas/DailyForecast'
+        '400':
+          description: Bad Request - Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Too Many Requests - API key quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    WeatherInfo:
+      type: object
+      properties:
+        id:
+          type: number
+        main:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+    CurrentWeather:
+      type: object
+      properties:
+        dt:
+          type: number
+        sunrise:
+          type: number
+        sunset:
+          type: number
+        temp:
+          type: number
+        feels_like:
+          type: number
+        pressure:
+          type: number
+        humidity:
+          type: number
+        dew_point:
+          type: number
+        uvi:
+          type: number
+        clouds:
+          type: number
+        visibility:
+          type: number
+        wind_speed:
+          type: number
+        wind_deg:
+          type: number
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherInfo'
+    DailyForecast:
+      type: object
+      properties:
+        dt:
+          type: number
+        sunrise:
+          type: number
+        sunset:
+          type: number
+        moonrise:
+          type: number
+        moonset:
+          type: number
+        moon_phase:
+          type: number
+        temp:
+          type: object
+          properties:
+            day:
+              type: number
+            min:
+              type: number
+            max:
+              type: number
+            night:
+              type: number
+            eve:
+              type: number
+            morn:
+              type: number
+        feels_like:
+          type: object
+          properties:
+            day:
+              type: number
+            night:
+              type: number
+            eve:
+              type: number
+            morn:
+              type: number
+        pressure:
+          type: number
+        humidity:
+          type: number
+        dew_point:
+          type: number
+        wind_speed:
+          type: number
+        wind_deg:
+          type: number
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherInfo'
+        clouds:
+          type: number
+        pop:
+          type: number
+        rain:
+          type: number
+        uvi:
+          type: number
+    HourlyForecast:
+      type: object
+      properties:
+        dt:
+          type: number
+        temp:
+          type: number
+        feels_like:
+          type: number
+        pressure:
+          type: number
+        humidity:
+          type: number
+        dew_point:
+          type: number
+        uvi:
+          type: number
+        clouds:
+          type: number
+        visibility:
+          type: number
+        wind_speed:
+          type: number
+        wind_deg:
+          type: number
+        weather:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherInfo'
+        pop:
+          type: number
+    Alert:
+      type: object
+      properties:
+        sender_name:
+          type: string
+        event:
+          type: string
+        start:
+          type: number
+        end:
+          type: number
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    OneCallResponse:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        timezone:
+          type: string
+        timezone_offset:
+          type: number
+        current:
+          $ref: '#/components/schemas/CurrentWeather'
+        hourly:
+          type: array
+          items:
+            $ref: '#/components/schemas/HourlyForecast'
+        daily:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyForecast'
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+    ErrorResponse:
+      type: object
+      properties:
+        cod:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message

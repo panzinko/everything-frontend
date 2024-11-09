@@ -1,0 +1,15 @@
+apis/DefaultApi.ts
+apis/index.ts
+index.ts
+models/Alert.ts
+models/CurrentWeather.ts
+models/DailyForecast.ts
+models/DailyForecastFeelsLike.ts
+models/DailyForecastTemp.ts
+models/ErrorResponse.ts
+models/HourlyForecast.ts
+models/OneCallResponse.ts
+models/OnecallClimateGet200Response.ts
+models/WeatherInfo.ts
+models/index.ts
+runtime.ts
