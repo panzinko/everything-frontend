@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link, useLoaderData } from 'react-router-dom';
-import { Character } from '../../lib/rick-and-morty-api-client';
+import type { SerializedCharacter } from '../loaders/CharacterLoader';
 
 const CharacterDetails = () => {
-  const character = useLoaderData() as Character;
+  const character = useLoaderData() as SerializedCharacter;
 
   return (
     <>
