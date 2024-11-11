@@ -1,0 +1,37 @@
+name: 'AWS Amplify Deploy'
+description: 'Deploy a project to AWS Amplify'
+
+inputs:
+  app-id:
+    description: 'AWS Amplify App ID'
+    required: true
+  branch-name:
+    description: 'Git branch name'
+    required: true
+  aws-role-arn:
+    description: 'AWS Role ARN'
+    required: true
+  region:
+    description: 'AWS Region'
+    required: true
+  aws-role-name:
+    description: 'AWS Role Name'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4.0.2
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.region }}
+        role-session-name: ${{ inputs.aws-role-name }}
+
+    - name: Deploy to AWS Amplify
+      shell: bash
+      run: |
+        aws amplify start-job \
+          --app-id ${{ inputs.app-id }} \
+          --branch-name ${{ inputs.branch-name }} \
+          --job-type RELEASE

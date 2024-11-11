@@ -1,0 +1,42 @@
+name: Stage Workflow
+
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read # Required for actions/checkout
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to AWS Amplify
+        uses: ./.github/actions/aws-amplify-deploy
+        with:
+          app-id: ${{ secrets.AWS_APP_ID }}
+          branch-name: '${{ github.ref_name }}'
+          aws-role-arn: 'arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}'
+          region: 'eu-north-1'
+          aws-role-name: ${{ secrets.AWS_ROLE_NAME }}
