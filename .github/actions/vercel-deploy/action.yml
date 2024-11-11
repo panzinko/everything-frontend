@@ -8,11 +8,14 @@ inputs:
   branch-name:
     description: 'Git branch name'
     required: true
+  vercel-token:
+    description: 'Vercel Token'
+    required: true
 
 runs:
   using: 'composite'
   env:
-    VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+    VERCEL_TOKEN: ${{ inputs.vercel-token }}
   steps:
     - name: Install Vercel CLI
       shell: bash

@@ -34,5 +34,4 @@ jobs:
         with:
           project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           branch-name: '${{ github.ref_name }}'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
