@@ -11,6 +11,8 @@ inputs:
 
 runs:
   using: 'composite'
+  env:
+    VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
   steps:
     - name: Install Vercel CLI
       shell: bash
