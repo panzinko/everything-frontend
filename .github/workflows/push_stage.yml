@@ -8,7 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Stage
+    environment:
+      name: Stage
+      url: https://stage.d1ycg9fd0kqhgj.amplifyapp.com/
     permissions:
       id-token: write # Required for OIDC
       contents: read # Required for actions/checkout

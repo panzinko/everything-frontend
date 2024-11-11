@@ -8,7 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Develop
+    environment:
+      name: Develop
+      url: https://everything-frontend.vercel.app/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
