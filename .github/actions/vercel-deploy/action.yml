@@ -14,8 +14,6 @@ inputs:
 
 runs:
   using: 'composite'
-  env:
-    VERCEL_TOKEN: ${{ inputs.vercel-token }}
   steps:
     - name: Install Vercel CLI
       shell: bash
@@ -23,16 +21,16 @@ runs:
 
     - name: Pull Vercel Environment Information
       shell: bash
-      run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
+      run: vercel pull --yes --environment=preview --token=${{ inputs.vercel-token }}
 
     - name: Build Project Artifacts
       shell: bash
-      run: vercel build --token=${{ env.VERCEL_TOKEN }}
+      run: vercel build --token=${{ inputs.vercel-token }}
 
     - name: Deploy Project Artifacts to Vercel
       shell: bash
       run: |
         vercel deploy --prebuilt \
-          --token=${{ env.VERCEL_TOKEN }} \
+          --token=${{ inputs.vercel-token }} \
           --project-id=${{ inputs.project-id }} \
           --meta branch=${{ inputs.branch-name }}
