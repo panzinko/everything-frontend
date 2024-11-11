@@ -2,9 +2,6 @@ name: 'Vercel Deploy'
 description: 'Deploy a project to Vercel'
 
 inputs:
-  project-id:
-    description: 'Vercel Project ID'
-    required: true
   branch-name:
     description: 'Git branch name'
     required: true
@@ -32,5 +29,4 @@ runs:
       run: |
         vercel deploy --prebuilt \
           --token=${{ inputs.vercel-token }} \
-          --project-id=${{ inputs.project-id }} \
           --meta branch=${{ inputs.branch-name }}
