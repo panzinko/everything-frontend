@@ -36,7 +36,7 @@ export interface CharacterLocation {
 /**
  * Check if a given object implements the CharacterLocation interface.
  */
-export function instanceOfCharacterLocation(value: object): boolean {
+export function instanceOfCharacterLocation(value: object): value is CharacterLocation {
     return true;
 }
 
@@ -55,10 +55,15 @@ export function CharacterLocationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function CharacterLocationToJSON(value?: CharacterLocation | null): any {
+  export function CharacterLocationToJSON(json: any): CharacterLocation {
+      return CharacterLocationToJSONTyped(json, false);
+  }
+
+  export function CharacterLocationToJSONTyped(value?: CharacterLocation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'name': value['name'],

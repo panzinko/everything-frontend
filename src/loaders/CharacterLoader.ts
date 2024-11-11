@@ -13,6 +13,8 @@ export async function fetchCharacters() {
     const response = await api.fetchAllCharacters();
     // return { characters: getTopCharacters(response.results!, 5) };
 
+    console.log(response);
+
     // serialize the characters
     const serializedCharacters = response.results?.map((character) => ({
       ...character,

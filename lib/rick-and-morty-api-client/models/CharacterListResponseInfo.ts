@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Rick and Morty API
- * Access information about characters from Rick and Morty.
+ * API for fetching character information from Rick and Morty series
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -20,25 +20,25 @@ import { exists, mapValues } from '../runtime';
  */
 export interface CharacterListResponseInfo {
     /**
-     * The total number of characters.
+     * The total number of characters
      * @type {number}
      * @memberof CharacterListResponseInfo
      */
     count?: number;
     /**
-     * The total number of pages.
+     * The total number of pages
      * @type {number}
      * @memberof CharacterListResponseInfo
      */
     pages?: number;
     /**
-     * URL of the next page.
+     * URL of the next page
      * @type {string}
      * @memberof CharacterListResponseInfo
      */
     next?: string | null;
     /**
-     * URL of the previous page.
+     * URL of the previous page
      * @type {string}
      * @memberof CharacterListResponseInfo
      */
@@ -48,10 +48,8 @@ export interface CharacterListResponseInfo {
 /**
  * Check if a given object implements the CharacterListResponseInfo interface.
  */
-export function instanceOfCharacterListResponseInfo(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfCharacterListResponseInfo(value: object): value is CharacterListResponseInfo {
+    return true;
 }
 
 export function CharacterListResponseInfoFromJSON(json: any): CharacterListResponseInfo {
@@ -59,31 +57,33 @@ export function CharacterListResponseInfoFromJSON(json: any): CharacterListRespo
 }
 
 export function CharacterListResponseInfoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CharacterListResponseInfo {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'pages': !exists(json, 'pages') ? undefined : json['pages'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'prev': !exists(json, 'prev') ? undefined : json['prev'],
+        'count': json['count'] == null ? undefined : json['count'],
+        'pages': json['pages'] == null ? undefined : json['pages'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'prev': json['prev'] == null ? undefined : json['prev'],
     };
 }
 
-export function CharacterListResponseInfoToJSON(value?: CharacterListResponseInfo | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function CharacterListResponseInfoToJSON(json: any): CharacterListResponseInfo {
+      return CharacterListResponseInfoToJSONTyped(json, false);
+  }
+
+  export function CharacterListResponseInfoToJSONTyped(value?: CharacterListResponseInfo | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'count': value.count,
-        'pages': value.pages,
-        'next': value.next,
-        'prev': value.prev,
+        'count': value['count'],
+        'pages': value['pages'],
+        'next': value['next'],
+        'prev': value['prev'],
     };
 }
 

@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Rick and Morty API
- * Access information about characters from Rick and Morty.
+ * API for fetching character information from Rick and Morty series
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Character } from './Character';
 import {
     CharacterFromJSON,
     CharacterFromJSONTyped,
     CharacterToJSON,
+    CharacterToJSONTyped,
 } from './Character';
 import type { CharacterListResponseInfo } from './CharacterListResponseInfo';
 import {
     CharacterListResponseInfoFromJSON,
     CharacterListResponseInfoFromJSONTyped,
     CharacterListResponseInfoToJSON,
+    CharacterListResponseInfoToJSONTyped,
 } from './CharacterListResponseInfo';
 
 /**
@@ -49,10 +51,8 @@ export interface CharacterListResponse {
 /**
  * Check if a given object implements the CharacterListResponse interface.
  */
-export function instanceOfCharacterListResponse(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfCharacterListResponse(value: object): value is CharacterListResponse {
+    return true;
 }
 
 export function CharacterListResponseFromJSON(json: any): CharacterListResponse {
@@ -60,27 +60,29 @@ export function CharacterListResponseFromJSON(json: any): CharacterListResponse 
 }
 
 export function CharacterListResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): CharacterListResponse {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'info': !exists(json, 'info') ? undefined : CharacterListResponseInfoFromJSON(json['info']),
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(CharacterFromJSON)),
+        'info': json['info'] == null ? undefined : CharacterListResponseInfoFromJSON(json['info']),
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(CharacterFromJSON)),
     };
 }
 
-export function CharacterListResponseToJSON(value?: CharacterListResponse | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function CharacterListResponseToJSON(json: any): CharacterListResponse {
+      return CharacterListResponseToJSONTyped(json, false);
+  }
+
+  export function CharacterListResponseToJSONTyped(value?: CharacterListResponse | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'info': CharacterListResponseInfoToJSON(value.info),
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(CharacterToJSON)),
+        'info': CharacterListResponseInfoToJSON(value['info']),
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(CharacterToJSON)),
     };
 }
 

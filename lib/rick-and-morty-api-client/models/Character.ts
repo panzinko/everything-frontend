@@ -13,18 +13,20 @@
  */
 
 import { mapValues } from '../runtime';
-import type { CharacterLocation } from './CharacterLocation';
-import {
-    CharacterLocationFromJSON,
-    CharacterLocationFromJSONTyped,
-    CharacterLocationToJSON,
-} from './CharacterLocation';
 import type { CharacterOrigin } from './CharacterOrigin';
 import {
     CharacterOriginFromJSON,
     CharacterOriginFromJSONTyped,
     CharacterOriginToJSON,
+    CharacterOriginToJSONTyped,
 } from './CharacterOrigin';
+import type { CharacterLocation } from './CharacterLocation';
+import {
+    CharacterLocationFromJSON,
+    CharacterLocationFromJSONTyped,
+    CharacterLocationToJSON,
+    CharacterLocationToJSONTyped,
+} from './CharacterLocation';
 
 /**
  * 
@@ -109,7 +111,7 @@ export interface Character {
 /**
  * Check if a given object implements the Character interface.
  */
-export function instanceOfCharacter(value: object): boolean {
+export function instanceOfCharacter(value: object): value is Character {
     return true;
 }
 
@@ -138,10 +140,15 @@ export function CharacterFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function CharacterToJSON(value?: Character | null): any {
+  export function CharacterToJSON(json: any): Character {
+      return CharacterToJSONTyped(json, false);
+  }
+
+  export function CharacterToJSONTyped(value?: Character | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

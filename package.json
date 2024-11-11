@@ -9,7 +9,9 @@
     "dev": "vite",
     "lint": "eslint src",
     "test": "vitest src",
-    "test:e2e": "npx playwright install && playwright test"
+    "test:e2e": "npx playwright install && playwright test",
+    "generate-api-rick-and-morty": "openapi-generator-cli generate -i openapi-scripts/rick-and-morty-api.yml -g typescript-fetch -o lib/rick-and-morty-api-client --additional-properties=supportsES6=true",
+    "generate-api-openweathermap": "openapi-generator-cli generate -i openapi-scripts/openweather-api.yml -g typescript-fetch -o lib/openweather-api-client --additional-properties=supportsES6=true"
   },
   "author": "Przeprogramowani",
   "license": "ISC",
