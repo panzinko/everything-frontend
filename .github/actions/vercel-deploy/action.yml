@@ -1,0 +1,33 @@
+name: 'Vercel Deploy'
+description: 'Deploy a project to Vercel'
+
+inputs:
+  project-id:
+    description: 'Vercel Project ID'
+    required: true
+  branch-name:
+    description: 'Git branch name'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Vercel CLI
+      shell: bash
+      run: npm install --global vercel@latest
+
+    - name: Pull Vercel Environment Information
+      shell: bash
+      run: vercel pull --yes --environment=preview --token=${{ env.VERCEL_TOKEN }}
+
+    - name: Build Project Artifacts
+      shell: bash
+      run: vercel build --token=${{ env.VERCEL_TOKEN }}
+
+    - name: Deploy Project Artifacts to Vercel
+      shell: bash
+      run: |
+        vercel deploy --prebuilt \
+          --token=${{ env.VERCEL_TOKEN }} \
+          --project-id=${{ inputs.project-id }} \
+          --meta branch=${{ inputs.branch-name }}

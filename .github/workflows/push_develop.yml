@@ -1,0 +1,38 @@
+name: Develop Workflow
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Vercel
+        uses: ./.github/actions/vercel-deploy
+        with:
+          project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          branch-name: '${{ github.ref_name }}'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
