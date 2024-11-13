@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Rick and Morty API
+  description: API for fetching character information from Rick and Morty series
+  version: 1.0.0
+servers:
+  - url: https://rickandmortyapi.com/api
+paths:
+  /character:
+    get:
+      summary: Fetch all characters
+      description: Get a list of characters with optional filtering
+      operationId: fetchAllCharacters
+      parameters:
+        - name: name
+          in: query
+          description: Filter by character name
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CharacterListResponse'
+  /character/{id}:
+    get:
+      summary: Fetch a single character by ID
+      operationId: fetchSingleCharacter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'
+components:
+  schemas:
+    CharacterListResponse:
+      type: object
+      properties:
+        info:
+          $ref: '#/components/schemas/CharacterListResponseInfo'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Character'
+    CharacterListResponseInfo:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of characters
+        pages:
+          type: integer
+          description: The total number of pages
+        next:
+          type: string
+          nullable: true
+          description: URL of the next page
+        prev:
+          type: string
+          nullable: true
+          description: URL of the previous page
+    Character:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+        species:
+          type: string
+        type:
+          type: string
+        gender:
+          type: string
+        origin:
+          $ref: '#/components/schemas/CharacterOrigin'
+        location:
+          $ref: '#/components/schemas/CharacterLocation'
+        image:
+          type: string
+        episode:
+          type: array
+          items:
+            type: string
+        url:
+          type: string
+        created:
+          type: string
+          format: date-time
+    CharacterOrigin:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+    CharacterLocation:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string

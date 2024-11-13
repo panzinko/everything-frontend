@@ -26,3 +26,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+      - name: Add motivational quote
+        uses: adrianghub/gh-action-zen-quotes@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

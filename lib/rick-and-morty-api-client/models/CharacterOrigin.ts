@@ -36,7 +36,7 @@ export interface CharacterOrigin {
 /**
  * Check if a given object implements the CharacterOrigin interface.
  */
-export function instanceOfCharacterOrigin(value: object): boolean {
+export function instanceOfCharacterOrigin(value: object): value is CharacterOrigin {
     return true;
 }
 
@@ -55,10 +55,15 @@ export function CharacterOriginFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function CharacterOriginToJSON(value?: CharacterOrigin | null): any {
+  export function CharacterOriginToJSON(json: any): CharacterOrigin {
+      return CharacterOriginToJSONTyped(json, false);
+  }
+
+  export function CharacterOriginToJSONTyped(value?: CharacterOrigin | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'name': value['name'],
